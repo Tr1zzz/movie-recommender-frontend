@@ -1,0 +1,8 @@
+<app-recommendation-banner></app-recommendation-banner>
+<app-catalog-preview [title]="'Популярные фильмы'" [items]="popularMovies"
+    [imagePath]="environment.tmdbImageBaseUrl + '/w500'">
+</app-catalog-preview>
+
+<app-catalog-preview [title]="'Популярные сериалы'" [items]="popularSeries"
+    [imagePath]="environment.tmdbImageBaseUrl + '/w500'">
+</app-catalog-preview>
