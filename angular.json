@@ -3,11 +3,18 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "movie-recommender-frontend": {
+    "angular-movie-app-v2": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
         }
       },
       "root": "",
@@ -17,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/movie-recommender-frontend",
+            "outputPath": "dist/angular-movie-app-v2",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -32,18 +39,18 @@
               }
             ],
             "styles": [
+              "node_modules/ngx-spinner/animations/ball-triangle-path.css",
               "src/styles.scss"
             ],
             "scripts": []
           },
+          "stylePreprocessorOptions": {
+            "includePaths": [
+              "src/assets/css"
+            ]
+          },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -52,8 +59,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
                 }
               ],
               "outputHashing": "all"
@@ -70,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "movie-recommender-frontend:build:production"
+              "buildTarget": "angular-movie-app-v2:build:production"
             },
             "development": {
-              "buildTarget": "movie-recommender-frontend:build:development"
+              "buildTarget": "angular-movie-app-v2:build:development"
             }
           },
           "defaultConfiguration": "development"
