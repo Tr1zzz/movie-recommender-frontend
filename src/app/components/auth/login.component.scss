@@ -1,0 +1,66 @@
+@import '../../../assets/css/utilities/_variables.scss';
+
+.auth-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 6rem auto 0;
+    text-align: center;
+    color: $base-font-color;
+
+    .title {
+        font-size: 4rem;
+        color: $primary-color;
+        margin-bottom: 3rem;
+        font-family: $font-family--sans-serif;
+    }
+
+    form {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        input {
+            flex: 1 1 45%;
+            padding: 1.2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid transparent;
+            border-radius: 4px;
+            color: $base-font-color;
+            font-size: 1.6rem;
+
+            &:focus {
+                outline: none;
+                border-color: $primary-color;
+                box-shadow: 0 0 10px 0 $primary-color;
+            }
+        }
+
+        button {
+            padding: 1.2rem 2.4rem;
+            background: transparent;
+            border: 2px solid $primary-color;
+            color: $primary-color;
+            font-size: 1.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+
+            &:hover {
+                background: $primary-color;
+                color: $secondary-color;
+            }
+        }
+    }
+
+    .footer-text {
+        margin-top: 1.6rem;
+        font-size: 1.4rem;
+
+        a {
+            color: $primary-color;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+}

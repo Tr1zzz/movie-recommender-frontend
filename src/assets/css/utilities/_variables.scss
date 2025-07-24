@@ -1,0 +1,24 @@
+$font-family--sans-serif: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$base-font-size: 62.5%;
+/* 1rem = 10px */
+$base-line-height: 1.6;
+$base-font-family: $font-family--sans-serif;
+$base-font-weight: 400;
+$base-font-style: normal;
+$letter-spacing: 0.4px;
+
+/* Color palette */
+$base-bg: #0f0415;
+$base-font-color: #f0f0f0;
+$primary-color: #a6db38;
+$secondary-color: #1e1e1e;
+$accent-color: #e50914;
+$text-color: #ebd9f8;
+$text-color-grey: #80868b;
+
+/* Breakpoints */
+$breakpoint-xsmall: 640px;
+$breakpoint-small: 768px;
+$breakpoint-medium: 1024px;
+$breakpoint-large: 1200px;
+$breakpoint-xlarge: 1400px;

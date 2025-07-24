@@ -1,0 +1,20 @@
+<section class="profile-container">
+    <h2 class="profile-title">My Account</h2>
+
+    <div class="profile-field">
+        <span class="field-label">Name:</span>
+        <span class="field-value">{{ name }}</span>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Email:</span>
+        <span class="field-value">{{ email }}</span>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Role:</span>
+        <span class="field-value">{{ role }}</span>
+    </div>
+
+    <button class="btn-logout" (click)="logout()">Logout</button>
+</section>

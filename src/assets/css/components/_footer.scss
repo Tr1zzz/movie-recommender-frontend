@@ -1,0 +1,36 @@
+@import '../utilities/_variables.scss';
+
+.footer {
+  background-color: $secondary-color;
+  color: $text-color-grey;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  .footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  p {
+    margin: 1rem 0;
+    font-size: 1.4rem;
+
+    a {
+      color: $primary-color;
+      text-decoration: none;
+      transition: color 0.3s;
+
+      &:hover {
+        text-decoration: underline;
+        color: darken($primary-color, 10%);
+      }
+    }
+  }
+
+  /* remove any old links or social icons */
+  ul,
+  .social-links,
+  .credits {
+    display: none !important;
+  }
+}

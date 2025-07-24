@@ -1,0 +1,19 @@
+<div class="auth-container">
+    <h2 class="title">Login</h2>
+
+    <form (ngSubmit)="onSubmit()">
+        <input [(ngModel)]="email" name="email" placeholder="Email" required />
+        <input [(ngModel)]="password" name="password" type="password" placeholder="Password" required />
+        <button type="submit">Sign in</button>
+    </form>
+
+    <!-- Google will render its button here -->
+    <div id="google-signin-button"></div>
+
+    <p class="footer-text">
+        No account?
+        <a (click)="openRegister()">Sign up</a>
+    </p>
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+</div>
