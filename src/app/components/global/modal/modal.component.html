@@ -1,6 +1,13 @@
 <div *ngIf="isVisible" class="modal-backdrop" (click)="closeModal()"></div>
+
 <div *ngIf="isVisible" class="modal-content">
+    <!-- динамический компонент -->
+    <ng-container *ngIf="dynamicComp" [ngComponentOutlet]="dynamicComp">
+    </ng-container>
+
+    <!-- либо iframe-трейлер -->
     <iframe *ngIf="videoUrl" [src]="videoUrl | safeUrl" frameborder="0" allowfullscreen>
     </iframe>
-    <button (click)="closeModal()" class="close-button">X</button>
+
+    <button class="close-button" (click)="closeModal()">×</button>
 </div>

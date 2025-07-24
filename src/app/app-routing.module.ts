@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
+/* feature */
 import { HomeComponent } from './components/home/home.component';
 import { MoviesComponent } from './components/movies/movies.component';
 import { TvComponent } from './components/tv/tv.component';
@@ -11,55 +13,38 @@ import { TvCategoryComponent } from './components/tv-category/tv-category.compon
 import { GenreComponent } from './components/genre/genre.component';
 import { SearchComponent } from './components/global/search/search.component';
 
+/* auth */
+import { LoginComponent } from './components/auth/login.component';
+import { RegisterComponent } from './components/auth/register.component';
+import { ProfileComponent } from './components/auth/profile/profile.component';
+
+/* guard */
+import { AuthGuard } from './api/auth.guard';
+
 const routes: Routes = [
+  // public
+  { path: '', component: HomeComponent },
+  { path: 'movie', component: MoviesComponent },
+  { path: 'tv', component: TvComponent },
+  { path: 'movie/:id', component: MoviesInfoComponent },
+  { path: 'tv/:id', component: TvInfoComponent },
+  { path: 'person/:id', component: PersonComponent },
+  { path: 'movie/category/:category', component: MovieCategoryComponent },
+  { path: 'tv/category/:category', component: TvCategoryComponent },
+  { path: 'genres/:id/:type', component: GenreComponent },
+  { path: 'search', component: SearchComponent },
+
+  // auth
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+
+  // protected
   {
-    path: '',
-    component: HomeComponent,
+     path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] 
   },
-  {
-    path: 'movie',
-    component: MoviesComponent,
-  },
-  {
-    path: 'tv',
-    component: TvComponent,
-  },
-  {
-    path: 'movie/:id',
-    component: MoviesInfoComponent,
-  },
-  {
-    path: 'tv/:id',
-    component: TvInfoComponent,
-  },
-  {
-    path: 'person/:id',
-    component: PersonComponent,
-  },
-  { 
-    path: 'movie/category/:category', 
-    component: MovieCategoryComponent 
-  },
-  { 
-    path: 'tv/category/:category', 
-    component: TvCategoryComponent 
-  },
-  {
-    path: 'genres/:id/:type',
-    component: GenreComponent
-  },
-  {
-    path: 'tv/category/:id',
-    component: TvCategoryComponent,
-  },
-  {
-    path: 'search',
-    component: SearchComponent
-  },
-  {
-    path: '**',
-    redirectTo: '',
-  },
+
+  // wildcard
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
