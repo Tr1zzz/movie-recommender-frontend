@@ -13,12 +13,12 @@
   </app-carousel>
 
   <h2 class="section-title">Now Playing</h2>
-  <app-carousel [title]="'Now Playing'" [isExplore]="false" [exploreLink]="'/movie/category/now_playing'"
-    [items]="moviesSlider" [canNavigateLeft]="true" [canNavigateRight]="true">
+  <app-carousel [title]="'Now Playing'" [items]="moviesSlider" [canNavigateLeft]="true" [canNavigateRight]="true"
+    [isExplore]="false">
   </app-carousel>
 
   <h2 class="section-title">Popular TV Shows</h2>
-  <app-carousel [title]="'TV Highlights'" [isExplore]="false" [exploreLink]="'/tv/category/airing_today'"
-    [items]="tvSlider" [canNavigateLeft]="true" [canNavigateRight]="true">
+  <app-carousel [title]="'TV Highlights'" [items]="tvSlider" [canNavigateLeft]="true" [canNavigateRight]="true"
+    [isExplore]="false">
   </app-carousel>
 </section>

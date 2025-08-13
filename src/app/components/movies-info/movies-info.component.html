@@ -1,42 +1,59 @@
 <app-hero [data]="movie_data"></app-hero>
 
+<!-- ваша старая таб-навигация -->
 <div class="nav">
-    <button type="button" id="overview" class="buttonTab" [class.buttonActive]="activeTab === 'overview'"
+    <button type="button" id="overview" class="buttonTab" [class.buttonActive]="activeTab==='overview'"
         (click)="setActiveTab('overview')">
         Overview
     </button>
-    <button type="button" id="videos" class="buttonTab" [class.buttonActive]="activeTab === 'videos'"
+    <button type="button" id="videos" class="buttonTab" [class.buttonActive]="activeTab==='videos'"
         (click)="setActiveTab('videos')">
         Videos
     </button>
-    <button type="button" id="backdrop" class="buttonTab" [class.buttonActive]="activeTab === 'backdrop'"
+    <button type="button" id="backdrop" class="buttonTab" [class.buttonActive]="activeTab==='backdrop'"
         (click)="setActiveTab('backdrop')">
         Photos
     </button>
 </div>
 
-
-<div *ngIf="activeTab === 'overview'" id="overview">
+<!-- Overview -->
+<div *ngIf="activeTab==='overview'" id="overview">
     <div class="spacing">
-        <app-media [data]="movie_data" [type]="type" [externalData]="external_data" class="info"></app-media>
+        <app-media [data]="movie_data" [type]="type" [externalData]="external_data" class="info">
+        </app-media>
+
+        <!-- вот тут ваши звёздочки -->
+        <div class="rating-stars">
+            <ng-container *ngFor="let s of [1,2,3,4,5]">
+                <span class="star" [class.filled]="s <= userRating" [class.hovered]="s <= hoverRating"
+                    (click)="onRate(s)" (mouseover)="hoverRating = s" (mouseleave)="hoverRating = 0">
+                    ★
+                </span>
+            </ng-container>
+        </div>
     </div>
 </div>
 
-<div *ngIf="activeTab === 'videos'">
+<!-- Videos -->
+<div *ngIf="activeTab==='videos'" id="videos">
     <div class="spacing">
-        <app-videos class="videos" [videosData]="videos" [videoTypes]="videoTypes"></app-videos>
+        <app-videos [videosData]="videos"></app-videos>
     </div>
 </div>
 
-<div *ngIf="activeTab === 'backdrop'" id="backdrop">
+<!-- Backdrop -->
+<div *ngIf="activeTab==='backdrop'" id="backdrop">
     <div class="spacing">
         <app-images [backdrops]="backdrops" [posters]="posters"></app-images>
     </div>
 </div>
 
-
+<!-- Cast carousel -->
 <app-carousel [title]="'Cast'" [exploreLink]="'/person'" [items]="cast_data" [isExplore]="false" [isCastCarousel]="true"
-    [isDefaultCarousel]="false"></app-carousel>
+    [isDefaultCarousel]="false">
+</app-carousel>
 
-<app-carousel [title]="'More Like This'" [exploreLink]="'/movie'" [isExplore]="true" [items]="recom_data" [canNavigateLeft]="true"
-    [canNavigateRight]="true"></app-carousel>
+<!-- More Like This carousel -->
+<app-carousel [title]="'More Like This'" [exploreLink]="'/movie'" [isExplore]="true" [items]="recom_data"
+    [canNavigateLeft]="true" [canNavigateRight]="true">
+</app-carousel>

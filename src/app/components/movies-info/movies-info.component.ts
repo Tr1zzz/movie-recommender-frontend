@@ -22,8 +22,15 @@ export class MoviesInfoComponent implements OnInit {
   person_data: any;
   type: 'movie' = 'movie';
 
+  // — Добавлено для звёздочек —
+  userRating = 0;
+  hoverRating = 0;
 
-  constructor(private apiService: ApiService, private router: ActivatedRoute, private spinner: NgxSpinnerService) { }
+  constructor(
+    private apiService: ApiService,
+    private router: ActivatedRoute,
+    private spinner: NgxSpinnerService
+  ) { }
 
   ngOnInit() {
     this.router.params.subscribe((params: Params) => {
@@ -47,29 +54,23 @@ export class MoviesInfoComponent implements OnInit {
   getMovieInfo(id: number) {
     this.apiService.getMovie(id).subscribe((result: any) => {
       this.movie_data = result;
-
-      // Fetch YouTube trailer video
       this.apiService.getYouTubeVideo(id, 'movie').subscribe(
         (videoRes: any) => {
-          const video = videoRes.results.find((vid: any) => vid.site === 'YouTube' && ['Trailer', 'Teaser', 'Clip'].includes(vid.type));
+          const video = videoRes.results.find((vid: any) =>
+            vid.site === 'YouTube' && ['Trailer','Teaser','Clip'].includes(vid.type)
+          );
           if (video) {
-            this.movie_data.videoId = video.key; // Set the video key in movie_data
-          } else {
-            console.warn('No trailer or relevant video found for this movie.');
+            this.movie_data.videoId = video.key;
           }
-        },
-        videoError => {
-          console.error('Error fetching YouTube video:', videoError);
         }
       );
-
       this.getExternal(id);
     });
   }
 
   getExternal(id: number) {
-    this.apiService.getExternalId(id, 'movie').subscribe((result: any) => {
-      this.external_data = result;
+    this.apiService.getExternalId(id, 'movie').subscribe((res: any) => {
+      this.external_data = res;
     });
   }
 
@@ -82,32 +83,25 @@ export class MoviesInfoComponent implements OnInit {
   getMoviesBackdrop(id: number) {
     this.apiService.getBackdrops(id, 'movie').subscribe((res: any) => {
       this.backdrops = res.backdrops;
-      this.posters = [];
-      res.posters.forEach((poster: { file_path: string; }) => {
-        this.posters.push({
-          ...poster,
-          full_path: `https://image.tmdb.org/t/p/w342${poster.file_path}`
-        });
-      });
+      this.posters = res.posters.map((p: any) => ({
+        ...p,
+        full_path: `https://image.tmdb.org/t/p/w342${p.file_path}`
+      }));
     });
   }
 
   getMovieCast(id: number) {
     this.apiService.getCredits(id, 'movie').subscribe(
       (res: any) => {
-        this.cast_data = [];
-        for (let item of res.cast) {
-          this.cast_data.push({
-            link: `/person/${item.id}`,
-            imgSrc: item.profile_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.profile_path}` : null,
-            name: item.name,
-            character: item.character,
-            popularity: item.popularity,
-          });
-        }
-      },
-      error => {
-        console.error('Error fetching credits data', error);
+        this.cast_data = res.cast.map((item: any) => ({
+          link: `/person/${item.id}`,
+          imgSrc: item.profile_path
+            ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.profile_path}`
+            : null,
+          name: item.name,
+          character: item.character,
+          popularity: item.popularity,
+        }));
       }
     );
   }
@@ -117,17 +111,21 @@ export class MoviesInfoComponent implements OnInit {
       (res: any) => {
         this.recom_data = res.results.map((item: any) => ({
           link: `/movie/${item.id}`,
-          imgSrc: item.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.poster_path}` : null,
+          imgSrc: item.poster_path
+            ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.poster_path}`
+            : null,
           title: item.title,
-          vote: item.vote_average ? item.vote_average : 'N/A',
-          rating: item.vote_average ? item.vote_average * 10 : 'N/A',
+          vote: item.vote_average,
+          rating: item.vote_average * 10
         }));
-      },
-      error => {
-        console.error('Error fetching recommended movies data', error);
       }
     );
   }
 
-
+  // — Добавлено: отправка оценки и сохранение локально —
+  onRate(stars: number) {
+    this.apiService.rateMovie(this.id, stars * 2).subscribe(() => {
+      this.userRating = stars;
+    });
+  }
 }

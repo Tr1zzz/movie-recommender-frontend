@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../api/api.service';
-import { delay } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { forkJoin, of } from 'rxjs';
+import { switchMap, map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -12,51 +13,75 @@ export class HomeComponent implements OnInit {
   forYouSlider: any[] = [];
   moviesSlider: any[] = [];
   tvSlider: any[] = [];
-  movies_data: any[] = [];
 
   constructor(private apiService: ApiService, private spinner: NgxSpinnerService) {}
 
   ngOnInit(): void {
     this.spinner.show();
-    this.apiService.getRecommendedMovies().subscribe(res => this.forYouSlider = res);
-    this.fetchTrendingContent('movie', 1, 'movies');
-    this.fetchTrendingContent('tv', 1, 'tvShows');
-    this.getNowPlaying('movie', 1);
-    setTimeout(() => this.spinner.hide(), 2000);
+
+    // 1) получаем список tmdb_id
+    this.apiService.getRecommendedMovies().pipe(
+      // 2) если пусто — fallback на trending movies
+      switchMap((ids: number[]) => {
+        if (!ids || ids.length === 0) {
+          return this.apiService.getTrending('movie', 1).pipe(
+            map(res =>
+              (res.results || []).slice(0, 10).map((m: any) => ({
+                id: m.id,
+                link: `/movie/${m.id}`,
+                imgSrc: m.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${m.poster_path}` : null,
+                title: m.title,
+                vote: m.vote_average
+              }))
+            )
+          );
+        }
+        // 3) иначе подтягиваем карточки по каждому id
+        return forkJoin(
+          ids.map(id =>
+            this.apiService.getMovie(id).pipe(
+              map((movie: any) => ({
+                id: movie.id,
+                link: `/movie/${movie.id}`,
+                imgSrc: movie.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${movie.poster_path}` : null,
+                title: movie.title,
+                vote: movie.vote_average
+              }))
+            )
+          )
+        );
+      }),
+      catchError(_err => of([]))
+    ).subscribe((items: any[]) => {
+      this.forYouSlider = items || [];
+      this.spinner.hide();
+    });
+
+    this.loadNowPlaying();
+    this.loadTvHighlights();
   }
 
-  getNowPlaying(mediaType: 'movie', page: number): void {
-    this.apiService.getNowPlaying(mediaType, page).pipe(delay(2000)).subscribe(res => {
-      this.movies_data = res.results.map((item: any) => {
-        const movieItem = { ...item, link: `/movie/${item.id}`, videoId: '' };
-        this.apiService.getYouTubeVideo(item.id, 'movie').subscribe(videoRes => {
-          const video = videoRes.results.find((v: any) => v.site === 'YouTube' && v.type === 'Trailer');
-          if (video) movieItem.videoId = video.key;
-        });
-        return movieItem;
-      });
+  private loadNowPlaying(): void {
+    this.apiService.getNowPlaying('movie', 1).subscribe(res => {
+      this.moviesSlider = (res.results || []).map((item: any) => ({
+        id: item.id,
+        link: `/movie/${item.id}`,
+        imgSrc: item.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.poster_path}` : null,
+        title: item.title,
+        vote: item.vote_average
+      }));
     });
   }
 
-  fetchTrendingContent(media: string, page: number, type: string): void {
-    this.apiService.getTrending(media, page).subscribe(response => {
-      if (type === 'movies') {
-        this.moviesSlider = response.results.map((item: any) => ({
-          link: `/movie/${item.id}`,
-          imgSrc: item.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.poster_path}` : null,
-          title: item.title,
-          rating: item.vote_average * 10,
-          vote: item.vote_average
-        }));
-      } else {
-        this.tvSlider = response.results.map((item: any) => ({
-          link: `/tv/${item.id}`,
-          imgSrc: item.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.poster_path}` : null,
-          title: item.name,
-          rating: item.vote_average * 10,
-          vote: item.vote_average
-        }));
-      }
+  private loadTvHighlights(): void {
+    this.apiService.getTrending('tv', 1).subscribe(res => {
+      this.tvSlider = (res.results || []).map((item: any) => ({
+        id: item.id,
+        link: `/tv/${item.id}`,
+        imgSrc: item.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.poster_path}` : null,
+        title: item.name,
+        vote: item.vote_average
+      }));
     });
   }
 }
